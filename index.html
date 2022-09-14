@@ -10,22 +10,31 @@
   <body>
     <div id="app">
       <h1>Список задач</h1>
-      <div>Осталось сделать задач: <span class="counter">{{tasks.length}}</span></div>
+      <transition name="bounce">
+        <div v-if="count() == 0">Вы великолепны!</div>
+        <div v-else-if="count() == 1">Поднажми, осталась одна задача!</div>
+      </transition>
+
+      <div v-else>Осталось сделать задач: <span class="counter">{{ count()}}</span></div>
       <div class="list">
-        <div class="item" v-for="task in tasks">
-          <input type="checkbox" />
-          {{task}}
+        <div class="item" :class="{done: task.done}" v-for="task in tasks">
+          <input type="checkbox" v-model="task.done" />
+          {{task.text}}
         </div>
         <div class="item done" v-for="doneTask in doneTasks">
           <input type="checkbox" checked />
           {{doneTask}}
         </div>
       </div>
-      <div class="form">
-        <input :placeholder="message" />
-        <button :type="button" :disabled="false">Добавить</button>
+      <div class="form" @keyup.enter="addTaks">
+        <input v-model="message" />
+        <button :type="button" @click="addTaks" :disabled="false">Добавить</button>
       </div>
+      <transition name="fade">
+        <img src="https://klike.net/uploads/posts/2021-03/1616142163_1.jpg" v-show="count() == 0" />
+      </transition>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <script src="index.js"></script>
   </body>
